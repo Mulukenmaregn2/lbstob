@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html>
+
+<!-- Mirrored from mulukenn.web.app/ by HTTrack Website Copier/3.x [XR&CO'2017], Fri, 12 May 2023 10:56:33 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>welcome!</title>
+  <style>
+  	img{
+  	height:200px;
+  width:200px;
+  border:2px solid black;
+  }
+  </style>
+  <script src="../www.gstatic.com/firebasejs/8.6.3/firebase-app.js"></script>
+ <script src="../www.gstatic.com/firebasejs/8.6.3/firebase-auth.js"></script>
+ <script src="../www.gstatic.com/firebasejs/8.6.3/firebase-database.js"></script>
+ <script src="../www.gstatic.com/firebasejs/8.6.3/firebase-storage.js"></script>
+</head>
+<body>
+ Image Name <input id="namebox" type="text"><br><br>
+ <img id="myimg"><label id="UpProgress" >0%</label><br><br>
+ 	
+ <button onclick="select();">Select Image</button>
+ <button onclick="upload();">Upload Image</button>
+ <button id="retrieve">Retrive Image</button>
+ 
+ <script>
+ 	
+ var ImgName, ImgUrl;
+ var files = [];
+ var reader;
+ 
+  function select(){
+  var input = document.createElement('input');
+  input.type = 'file';
+  input.onchange = e => {
+  	files = e.target.files;
+      reader = new FileReader();
+      reader.onload = function(){ document.getElementById('myimg').src = reader.result; }
+      reader.readAsDataURL(files[0]);
+      document.getElementById('namebox').set.text =reader.result; 
+      }
+  input.click();
+  }
+  </script>
+  
+  	<script>
+  	function upload(){
+      ImageName = document.getElementById('namebox').value;
+      var uploadTask = firebase.storage().ref('Images/'+ImageName+'.png').put(files[0]);
+      uploadTask.on('state_changed', function(snapshot){
+
+      var progress = (snapshot.bytesTransferred / snapshot.totalBytes)*100;
+      document.getElemenById('UpProgress').innerHTML = 'upload'+progress+'%';
+     },
+     function(error){
+     	alert('error in saving the image');
+     },
+     function(){
+     	uploadTask.snapshot.ref.getDownloadURL().then(function(url){
+     	
+         ImageUrl = url;
+         
+         });
+         
+         firebase.databse().ref('Pictures/'+ImageName).set({
+         Name : ImageName,
+         Link : ImgUrl
+         
+         });
+         alert('Image added successfully');
+     }
+     
+    );
+  }
+  </script>
+  
+	
+</script>
+
+<script id="MainScript">
+	
+ var firebaseConfig = {
+    apiKey: "AIzaSyA_gXJt28YdWbmsQiZrFb2M4dEedPGUdgY",
+    authDomain: "mulukenn.firebaseapp.com",
+    databaseURL: "https://mulukenn-default-rtdb.firebaseio.com",
+    projectId: "mulukenn",
+    storageBucket: "mulukenn.appspot.com",
+    messagingSenderId: "550447998946",
+    appId: "1:550447998946:web:a678ad69947f9089133bbb"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  </script>
+  
+  
+   
+</body>
+
+<!-- Mirrored from mulukenn.web.app/ by HTTrack Website Copier/3.x [XR&CO'2017], Fri, 12 May 2023 10:56:40 GMT -->
+</html>
